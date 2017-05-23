@@ -1,5 +1,6 @@
 ##########################################
-#  This is a sinple spider implementation that support:
+# The real Spider impl. 
+# This is a sinple spider implementation that support:
 #  a) Auto pagination
 #  b) Auto text extraction.
 ###########################################
@@ -108,4 +109,18 @@ data_xpath =[
             ['fullstory','div#story_container','div.articleBody p','text','join'],
             ['image','div#story_container','div.articleBody img','src',None],
         ]
-print getData(url,a_xpath1,a_xpath2,data_xpath);
+all = getData(url,a_xpath1,a_xpath2,data_xpath);
+#pdb.set_trace();
+import requests
+URL ='http://52.89.112.230/api/banglagossip'
+#FIX it remove duplicates...
+for d in all:
+    r = requests.post(URL, json={"url": d['url'],"_cmd":"search"})
+    #pdb.set_trace()
+    if r.status_code == 200 and len(r.json()['out']) == 0:
+        print 'adding new...'
+        d['_cmd'] ='post'
+        r = requests.post(URL, json=d)
+        print r.json()
+    else:
+        print 'duplicate found...'
