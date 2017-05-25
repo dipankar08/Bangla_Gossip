@@ -80,7 +80,7 @@ def getDataFromUrl(soup,xpaths):
 """
   One common extrenal libs
 """
-def getData(url,a_xpath1, a_xpath2,f_data,a_limit=1,p_limit=1):
+def getData(url,a_xpath1, a_xpath2,f_data,a_limit=20,p_limit=1):
     ans =[]
     #1. First get all url to process
     for u0 in getAllUrls(url,p_limit):

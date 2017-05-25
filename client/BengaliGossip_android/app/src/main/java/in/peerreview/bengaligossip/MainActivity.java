@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private Button fetchButton, nextButton, prevButton;
     private ImageView images;
     private TextView title, fullstory;
+    private boolean fetch_in_progress = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,14 +71,20 @@ public class MainActivity extends AppCompatActivity {
             switch (v.getId()) {
                 case R.id.fetchButton:
                     try {
-
-                        doGetRequest("http://52.89.112.230/api/banglagossip?page=" + page + "&limit=10");
+                        doGetRequest("http://52.89.112.230/api/banglagossip2?page=" + page + "&limit=10");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                     break;
 
                 case R.id.nextButton:
+                    if(newsList.size() - newsListIdx < 5 ){
+                        try {
+                            doGetRequest("http://52.89.112.230/api/banglagossip2?page=" + page + "&limit=10");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                     newsListIdx++;
                     renderData(newsListIdx);
                     break;
@@ -95,6 +102,11 @@ public class MainActivity extends AppCompatActivity {
     };
 
     void doGetRequest(String url) throws IOException {
+        if(fetch_in_progress == true){
+            Toast.makeText(MainActivity.this, "Fetching request ignored as one request in progress.", Toast.LENGTH_LONG).show();
+            return ;
+        }
+        fetch_in_progress = true;
         Request request = new Request.Builder()
                 .url(url)
                 .build();
@@ -104,18 +116,25 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Request request, IOException e) {
+                        fetch_in_progress = false;
                         // Error
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                // For the example, you can show an error dialog or a toast
-                                // on the main UI thread
+                                Toast.makeText(MainActivity.this, "Fetching request Failed.", Toast.LENGTH_LONG).show();
                             }
                         });
                     }
 
                     @Override
                     public void onResponse(Response response) throws IOException {
+                        fetch_in_progress = false;
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(MainActivity.this, "Fetching request succeed.", Toast.LENGTH_LONG).show();
+                            }
+                        });
                         String jsonData = response.body().string();
                         JSONObject Jobject = null;
                         try {
@@ -168,8 +187,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         fullstory.setText(spannableString);
-        Picasso.with(this).load(now.getImgurl()).into(images);
-
+        try {
+            Picasso.with(this).load(now.getImgurl()).into(images);
+        }
+        catch (Exception e) {
+                e.printStackTrace();
+        }
     }
 
     class News {
