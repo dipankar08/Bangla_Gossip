@@ -80,7 +80,7 @@ def getDataFromUrl(soup,xpaths):
 """
   One common extrenal libs
 """
-def getData(url,a_xpath1, a_xpath2,f_data,a_limit=10,p_limit=1):
+def getData(url,a_xpath1, a_xpath2,f_data,a_limit=1,p_limit=1):
     ans =[]
     #1. First get all url to process
     for u0 in getAllUrls(url,p_limit):
@@ -99,28 +99,16 @@ def getData(url,a_xpath1, a_xpath2,f_data,a_limit=10,p_limit=1):
     return ans
 
     
-#test
-url='http://www.anandabazar.com/lifestyle?ref=archive-topnav'
-a_xpath1= 'div.row' 
-a_xpath2= 'div.grid-item a'
-#Note we need 5 entry
-data_xpath =[ 
-            ['title','div#story_container','div.storypage_cover_story h1','text','join'],
-            ['fullstory','div#story_container','div.articleBody p','text','join'],
-            ['image','div#story_container','div.articleBody img','src',None],
-        ]
-all = getData(url,a_xpath1,a_xpath2,data_xpath);
-#pdb.set_trace();
-import requests
-URL ='http://52.89.112.230/api/banglagossip'
-#FIX it remove duplicates...
-for d in all:
-    r = requests.post(URL, json={"url": d['url'],"_cmd":"search"})
-    #pdb.set_trace()
-    if r.status_code == 200 and len(r.json()['out']) == 0:
-        print 'adding new...'
-        d['_cmd'] ='post'
-        r = requests.post(URL, json=d)
-        print r.json()
-    else:
-        print 'duplicate found...'
+def test():
+    url='http://www.anandabazar.com/lifestyle?ref=archive-topnav'
+    a_xpath1= 'div.row' 
+    a_xpath2= 'div.grid-item a'
+    #Note we need 5 entry
+    data_xpath =[ 
+                ['title','div#story_container','div.storypage_cover_story h1','text','join'],
+                ['fullstory','div#story_container','div.articleBody p','text','join'],
+                ['image','div#story_container','div.articleBody img','src',None],
+            ]
+    all = getData(url,a_xpath1,a_xpath2,data_xpath);
+    
+#test();
