@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
     void doGetRequest(String url) throws IOException {
         if(fetch_in_progress == true){
-            Toast.makeText(MainActivity.this, "Fetching request ignored as one request in progress.", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "wait we are still fetching the page", Toast.LENGTH_LONG).show();
             return ;
         }
         fetch_in_progress = true;
@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(MainActivity.this, "Fetching request succeed.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(MainActivity.this, "Fetching request succeed. Now click next", Toast.LENGTH_LONG).show();
                             }
                         });
                         String jsonData = response.body().string();
@@ -156,8 +156,9 @@ public class MainActivity extends AppCompatActivity {
 /*
                                         newsListIdx++;
                                         renderData(newsListIdx);
+                                        */
                                         page++;
-*/
+
                                     }
                                 });
                             }
@@ -175,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         if (idx >= newsList.size()) {
-            Toast.makeText(this, "Fetching the news from server ..wait..", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Wait we are still fetch the data from server.", Toast.LENGTH_LONG).show();
             return;
         }
         News now = newsList.get(idx);
