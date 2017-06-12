@@ -1,5 +1,6 @@
 package in.peerreview.bengaligossip;
 
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private static int newsListIdx = -1;
     private static int page = 0;
     private Button fetchButton, nextButton, prevButton;
+    private ScrollView hsv;
     private ImageView images;
     private TextView title, fullstory;
     private boolean fetch_in_progress = false;
@@ -53,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         images = (ImageView) findViewById(R.id.img);
         title = (TextView) findViewById(R.id.title);
         fullstory = (TextView) findViewById(R.id.fullstory);
+        hsv =(ScrollView) findViewById(R.id.hsv);
 
         fetchButton.setOnClickListener(listener);
         nextButton.setOnClickListener(listener);
@@ -149,11 +153,11 @@ public class MainActivity extends AppCompatActivity {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-
+/*
                                         newsListIdx++;
                                         renderData(newsListIdx);
                                         page++;
-
+*/
                                     }
                                 });
                             }
@@ -191,8 +195,12 @@ public class MainActivity extends AppCompatActivity {
             Picasso.with(this).load(now.getImgurl()).into(images);
         }
         catch (Exception e) {
-                e.printStackTrace();
+            int imageResource = getResources().getIdentifier("@drawable/noimg", null, getPackageName());
+            Drawable res = getResources().getDrawable(imageResource);
+            images.setImageDrawable(res);
+            e.printStackTrace();
         }
+        hsv.fullScroll(View.FOCUS_UP);
     }
 
     class News {
